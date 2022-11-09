@@ -1,0 +1,77 @@
+import images from "../assets";
+
+const data = [
+  {
+    id: 1,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 2,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 3,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 4,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 5,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 6,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 7,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 8,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+  {
+    id: 9,
+    title: "COFFEE",
+    name: "cà phê",
+    price: "Cappuccino",
+    start: 5,
+    url: images.bacxiu,
+  },
+];
+export default data;
