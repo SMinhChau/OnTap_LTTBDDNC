@@ -11,7 +11,7 @@ import images from "../assets/index";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
-function Home() {
+function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewImg}>
@@ -46,7 +46,7 @@ function Home() {
         </TouchableOpacity>
 
         <Text style={styles.title_center}>Don't have an account?</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("TabsScreen")}>
           <Text style={styles.title_bottom}>Register</Text>
         </TouchableOpacity>
       </View>
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
     width: "85%",
     height: 55,
     paddingVertical: 10,
-    borderColor: "#808000",
     justifyContent: "center",
+    borderColor: "#808000",
     borderWidth: 2,
     borderRadius: "10%",
   },
