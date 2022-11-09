@@ -36,8 +36,8 @@ function TabsScreen({ navigation }) {
           tabBarInactiveTintColor: "gray",
           tabBarHideOnKeyboard: true,
           tabBarStyle: {
-            height: 90,
-            // paddingHorizontal: 5,
+            height: 80,
+
             paddingTop: 0,
             backgroundColor: "#000",
             // position: "absolute",

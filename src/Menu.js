@@ -15,6 +15,7 @@ import data from "./data";
 
 function Menu() {
   const [selectedIdCenter, setselectedIdCenter] = useState(null);
+  const [selectedIdBottom, setSelectedIdBottom] = useState(null);
   // Top FlatList
   const renderItem = ({ item }) => {
     const Item = ({ item, onPress }) => (
@@ -90,6 +91,43 @@ function Menu() {
     );
   };
 
+  // Main
+  const ItemBottom = ({ item, onPress, backgroundColor, textColor }) => (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.item, backgroundColor, styles.touch_botom]}
+    >
+      <View style={styles.f_image}>
+        <Image style={styles.FlatList_img_bottom} source={{ uri: item.url }} />
+      </View>
+
+      <View style={[styles.f_title, { flexDirection: "column" }]}>
+        <Text style={[styles.f_title__title]}>{item.name}</Text>
+        <Text style={styles.f_title__price}>{item.price}</Text>
+      </View>
+      <View style={[styles.cart_bottom]}>
+        <Text style={styles.price}>{item.title}</Text>
+        <TouchableOpacity style={styles.btn_content_bottom}>
+          <Text style={styles.btn_content__text}>Add</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderItemBottom = ({ item }) => {
+    const backgroundColor = item.id === selectedIdBottom ? "#2f3337" : "#000";
+    const color = item.id === selectedIdBottom ? "white" : "black";
+
+    return (
+      <ItemBottom
+        item={item}
+        onPress={() => setSelectedIdBottom(item.id)}
+        backgroundColor={{ backgroundColor }}
+        textColor={{ color }}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header>
@@ -139,7 +177,14 @@ function Menu() {
         />
       </View>
 
-      <View style={[styles.FlatList_bottom, styles.flex_center_row]}></View>
+      <View style={[styles.FlatList_bottom, styles.flex_center_row]}>
+        <FlatList
+          data={data}
+          renderItem={renderItemBottom}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -173,6 +218,11 @@ const styles = StyleSheet.create({
     height: "20%",
   },
   FlatList_img: {
+    height: 150,
+    width: 135,
+    resizeMode: "contain",
+  },
+  FlatList_img_bottom: {
     height: 150,
     width: 135,
     resizeMode: "contain",
@@ -219,6 +269,17 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: "10%",
     backgroundColor: "#808000",
   },
+  btn_content_bottom: {
+    width: 50,
+    height: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#808000",
+    borderWidth: 2,
+    borderBottomRightRadius: "10%",
+    borderTopLeftRadius: "10%",
+    backgroundColor: "#808000",
+  },
   item_about__bottom: {
     with: "100%",
     alignItems: "center",
@@ -232,7 +293,7 @@ const styles = StyleSheet.create({
 
   // FlatList_center
   FlatList_center: {
-    height: 60,
+    height: 40,
     width: "90%",
   },
   item_center: {
@@ -248,7 +309,49 @@ const styles = StyleSheet.create({
   },
   // FlatList_bottom
   FlatList_bottom: {
-    height: 60,
+    marginTop: 20,
+    height: 460,
     width: "90%",
+    display: "flex",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  touch_botom: {
+    marginRight: 15,
+    height: 300,
+    marginBottom: 15,
+    width: "48%",
+    // padding: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "column",
+  },
+  f_image: {
+    height: "60%",
+  },
+  f_title: {
+    width: "100%",
+    display: "flex",
+
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  f_title__title: {
+    fontSize: 16,
+    color: "#fff",
+  },
+  f_title__price: {
+    fontSize: 18,
+    color: "#808000",
+    fontWeight: "700",
+  },
+  cart_bottom: {
+    paddingLeft: 10,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
 });
