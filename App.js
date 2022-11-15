@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./src/Home";
 import TabsScreen from "./src/TabsScreen";
+import Cart from "./src/Cart";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function App() {
           options={{ title: "Welcome" }}
         />
         <Stack.Screen name="TabsScreen" component={TabsScreen} />
+        <Stack.Screen name="Cart" component={Cart} />
       </Stack.Navigator>
     </NavigationContainer>
   );

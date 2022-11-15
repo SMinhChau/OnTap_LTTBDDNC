@@ -10,12 +10,43 @@ import {
 import Header from "./compoment/Header";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import data from "./data";
+let listOrder = [];
 
-function Menu() {
+function Menu({ navigation }) {
   const [selectedIdCenter, setselectedIdCenter] = useState(null);
   const [selectedIdBottom, setSelectedIdBottom] = useState(null);
+
+  const [fullList, setFullList] = useState(data);
+  const [title, setTitle] = useState("");
+
+  // Fillerter FlatList Item d
+  const filteredList = useMemo(() => {
+    if (title.toUpperCase() === "") return fullList;
+    return fullList.filter(
+      (item) => title.toUpperCase() === item.title.toUpperCase()
+    );
+  }, [title, fullList]);
+
+  const onClick = (title) => () => {
+    setTitle(title);
+  };
+
+  //  Add to list Order
+  const handelOrder = (item1) => {
+    let flag = false;
+    listOrder.map((x) => {
+      if (x.id === item1.id) {
+        x.total = x.total + 1;
+        flag = true;
+      }
+    });
+
+    if (!flag) {
+      listOrder.push({ ...item1, total: 1 });
+    }
+  };
   // Top FlatList
   const renderItem = ({ item }) => {
     const Item = ({ item, onPress }) => (
@@ -38,7 +69,10 @@ function Menu() {
             style={[styles.item_about__bottom, { height: "25%", width: "90%" }]}
           >
             <Text style={styles.price}>{item.price}</Text>
-            <TouchableOpacity style={styles.btn_content}>
+            <TouchableOpacity
+              style={styles.btn_content}
+              onPress={() => navigation.navigate("Cart", { list: listOrder })}
+            >
               <Text style={styles.btn_content__text}>Add to cart</Text>
             </TouchableOpacity>
           </View>
@@ -48,8 +82,9 @@ function Menu() {
 
     return <Item item={item} onPress={() => setselectedIdCenter(item.id)} />;
   };
+
   // FlatList Button
-  const dataFilter = [
+  const [categories, setCategories] = useState([
     {
       id: 1,
       title: "Coffee",
@@ -64,13 +99,13 @@ function Menu() {
     },
     {
       id: 4,
-      title: "Hot Teas",
+      title: "",
     },
-  ];
+  ]);
 
-  const ItemCenter = ({ item, onPress, backgroundColor, textColor }) => (
+  const ItemCenter = ({ item, onTitle, backgroundColor, textColor }) => (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={onClick(onTitle)}
       style={[styles.item, styles.item_center, backgroundColor]}
     >
       <Text style={[styles.title_item_center, textColor]}>{item.title}</Text>
@@ -84,6 +119,7 @@ function Menu() {
     return (
       <ItemCenter
         item={item}
+        onTitle={item.title}
         onPress={() => setselectedIdCenter(item.id)}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
@@ -92,6 +128,7 @@ function Menu() {
   };
 
   // Main
+
   const ItemBottom = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity
       onPress={onPress}
@@ -107,7 +144,11 @@ function Menu() {
       </View>
       <View style={[styles.cart_bottom]}>
         <Text style={styles.price}>{item.title}</Text>
-        <TouchableOpacity style={styles.btn_content_bottom}>
+        <TouchableOpacity
+          style={styles.btn_content_bottom}
+          // onPress={() => navigation.navigate("Cart", { list: listOrder })}
+          onPress={() => handelOrder(item)}
+        >
           <Text style={styles.btn_content__text}>Add</Text>
         </TouchableOpacity>
       </View>
@@ -169,7 +210,7 @@ function Menu() {
 
       <View style={[styles.FlatList_center, styles.flex_center_row]}>
         <FlatList
-          data={dataFilter}
+          data={categories}
           renderItem={renderItemCenter}
           keyExtractor={(item) => item.id}
           extraData={selectedIdCenter}
@@ -179,7 +220,7 @@ function Menu() {
 
       <View style={[styles.FlatList_bottom, styles.flex_center_row]}>
         <FlatList
-          data={data}
+          data={filteredList}
           renderItem={renderItemBottom}
           numColumns={2}
           keyExtractor={(item) => item.id}

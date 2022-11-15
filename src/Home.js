@@ -1,6 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import {
+  Animated,
   Image,
+  PanResponder,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -10,16 +12,59 @@ import {
 import images from "../assets/index";
 
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useEffect, useRef } from "react";
 
 function Home({ navigation }) {
+  // Animated Appere
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 10000,
+      useNativeDriver: "true",
+    }).start();
+  }, [fadeAnim]);
+
+  // Animated Image
+  const pan = useRef(new Animated.ValueXY()).current;
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+
+    onPanResponderMove: Animated.event([
+      null,
+      {
+        dx: pan.x, // x,y are Animated.Value
+        dy: pan.y,
+      },
+    ]),
+
+    onPanResponderRelease: () => {
+      Animated.spring(
+        pan, // Auto-multiplexed
+        { toValue: { x: 0, y: 0 } }
+      ).start();
+    },
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewImg}>
-        <Image style={styles.logo} source={{ uri: images.background }} />
+        <Animated.Image
+          {...panResponder.panHandlers}
+          style={[pan.getLayout(), , styles.logo]}
+          source={{ uri: images.background }}
+        />
       </View>
+
       <View style={styles.content_top}>
         <View style={styles.content}>
-          <Text style={styles.title}>Discover premium coffee around you</Text>
+          {/* Animated */}
+          <Animated.Text style={[styles.title, { opacity: fadeAnim }]}>
+            Discover premium coffee around you
+          </Animated.Text>
         </View>
       </View>
       <View style={[styles.content_bottom, styles.center_center]}>
