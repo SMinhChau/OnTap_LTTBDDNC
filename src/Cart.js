@@ -9,41 +9,51 @@ import {
 } from "react-native";
 import Header from "./compoment/Header";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import data from "./data";
-import images from "../assets";
 import { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 
 function Cart({ navigation }) {
   const [listCart, setListCart] = useState([]);
 
+  const [cart, setCart] = useState(0);
   // params
   const route = useRoute();
+
   useEffect(() => {
     if (route.params != null) setListCart(route.params.list);
+    // setCart(listCart.reduce((count, { total }) => count + total, 0));
+    setCart(
+      listCart.reduce((count, quantity) => {
+        console.log("quantity.total", Number(quantity.total));
+        console.log("quantity.price", quantity.price);
+        return count + quantity.total * quantity.price;
+      }, 0)
+    );
   }, [listCart]);
 
-  const handleCountTop = (cart) => {
-    setListCart((items) => {
-      items.map((item) => {
-        if (item.id === cart.id) {
-          console.log("item.id", item.id);
-          return {
-            ...item,
-            total: item.total + 1,
-          };
-        } else {
-          console.log("return", items);
-          return [
-            ...items,
-            {
-              ...cart,
-              total: 1,
-            },
-          ];
+  const handelQuantity = (id, count) => {
+    let newList = listCart;
+    let deleted = false;
+    newList.map((item) => {
+      if (item.id === id) {
+        item.total = item.total + count;
+        if (item.total == 0) {
+          deleted = true;
+          console.log(" deleted = true");
         }
-      });
+      }
     });
+    if (deleted) {
+      newList = newList.filter((item) => item.id != id);
+    }
+    setListCart([...newList]);
+    setCart(
+      listCart.reduce((count, quantity) => {
+        console.log("quantity.total", Number(quantity.total));
+        console.log("quantity.price", quantity.price);
+        return count + quantity.total * quantity.price;
+      }, 0)
+    );
   };
 
   const handleCountDown = (cart) => {};
@@ -66,14 +76,18 @@ function Cart({ navigation }) {
         <View style={[styles.cart_bottom]}>
           <TouchableOpacity
             style={styles.btn_count}
-            onPress={() => handleCountTop(item)}
+            onPress={() => {
+              handelQuantity(item.id, 1);
+            }}
           >
             <Text>+</Text>
           </TouchableOpacity>
           <Text style={styles.count_item}>{item.total}</Text>
           <TouchableOpacity
             style={styles.btn_count}
-            onPress={handleCountDown(item)}
+            onPress={() => {
+              handelQuantity(item.id, -1);
+            }}
           >
             <Text>-</Text>
           </TouchableOpacity>
@@ -113,7 +127,7 @@ function Cart({ navigation }) {
       </View>
       <View style={styles.conten_total}>
         <Text style={[styles.f_title__title]}>Total: </Text>
-        <Text style={[styles.f_title__title]}>{total}</Text>
+        <Text style={[styles.f_title__title]}>{cart}.000 VND</Text>
       </View>
     </SafeAreaView>
   );

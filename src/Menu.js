@@ -1,4 +1,5 @@
 import {
+  Animated,
   FlatList,
   Image,
   SafeAreaView,
@@ -10,7 +11,7 @@ import {
 import Header from "./compoment/Header";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import data from "./data";
 let listOrder = [];
 
@@ -168,7 +169,32 @@ function Menu({ navigation }) {
       />
     );
   };
+  const animation = useRef(new Animated.Value(0)).current;
 
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(animation, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      })
+    ).start();
+  }, [animation]);
+  const animatedStyles = {
+    transform: [
+      {
+        rotate: animation.interpolate({
+          inputRange: [0, 1],
+          outputRange: ["0deg", "360deg"],
+        }),
+      },
+    ],
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Header>
@@ -188,11 +214,24 @@ function Menu({ navigation }) {
             name="chatbox-outline"
             size={30}
           />
-          <Ionicons
-            style={styles.icon_right}
+          <TouchableOpacity>
+            <Animated.View style={[animatedStyles]}>
+              <Ionicons
+                style={[styles.icon_right]}
+                name="notifications-outline"
+                size={30}
+              />
+            </Animated.View>
+          </TouchableOpacity>
+
+          {/* <Ionicons
+            style={[
+              styles.icon_right,
+              // { transform: [{ rotate: rotation }] }
+            ]}
             name="notifications-outline"
             size={30}
-          />
+          /> */}
         </View>
       </Header>
       <View style={[styles.FlatList, styles.flex_center_row]}>
